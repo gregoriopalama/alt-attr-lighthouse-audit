@@ -13,7 +13,8 @@ class AltAttQualityAudit extends Audit {
   }
 
   static audit(artifacts) {
-    const imgs = artifacts.ImageElements
+    const imgs = artifacts.ImageElements;
+    //TODO: implement audit logic here
     console.log(imgs);
     const score = 0;//imgs ? 1 : 0;
 
