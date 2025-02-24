@@ -10,6 +10,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "lighthouse": "^12.3.0"
+    "google-auth-library": "^9.15.1",
+    "lighthouse": "^12.3.0",
+    "node-fetch": "^3.3.2"
   }
 }

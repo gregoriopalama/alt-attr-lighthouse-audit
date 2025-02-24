@@ -1,0 +1,26 @@
+sequenceDiagram
+    participant AltAttQualityAudit
+    participant ValidateAltText
+    participant seetheunseen API
+    participant Lighthouse
+
+    activate AltAttQualityAudit
+    AltAttQualityAudit->>AltAttQualityAudit: removeNonEvaluableImages()
+    AltAttQualityAudit->>AltAttQualityAudit: Filtra immagini
+
+    loop per ogni immagine da valutare
+        AltAttQualityAudit->>AltAttQualityAudit: evaluateTagAltContent(immagine)
+        AltAttQualityAudit->>ValidateAltText: new ValidateAltText()
+        activate ValidateAltText
+        ValidateAltText->>ValidateAltText: recuperaImmagine(immagine.src)
+        ValidateAltText->>seetheunseen API: chiama API (immagine, immagine.alt)
+        activate seetheunseen API
+        seetheunseen API-->>ValidateAltText: restituisce valutazione
+        deactivate seetheunseen API
+        ValidateAltText-->>AltAttQualityAudit: memorizza risultato
+        deactivate ValidateAltText
+    end
+
+    AltAttQualityAudit->>AltAttQualityAudit: generateLightHouseTable()
+    AltAttQualityAudit->>Lighthouse: genera report
+    deactivate AltAttQualityAudit
