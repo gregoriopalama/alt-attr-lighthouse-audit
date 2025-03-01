@@ -48,7 +48,6 @@ async function getAccessToken() {
 
   const client = auth.fromJSON(parsedServiceAccount);
   client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
-
   const tokenResponse = await client.getAccessToken(); 
 
   if (!tokenResponse || !tokenResponse.token) {
