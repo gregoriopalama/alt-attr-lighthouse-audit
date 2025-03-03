@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'; // Assicurati di avere node-fetch installato
-import { GoogleAuth } from 'google-auth-library';
+import { auth } from 'google-auth-library';
 import { getRequestBody } from "./requestBody.js"; 
 
 async function validateAltText(imageUrl, altText) {
@@ -39,12 +39,15 @@ async function validateAltText(imageUrl, altText) {
  
 
 async function getAccessToken() {
-  const auth = new GoogleAuth({
-    keyFilename: "./audits/seetheunseen-c104c17ce1c1.json", // Assicurati che il percorso sia corretto
-    scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-  });
+  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT;
+  if (!serviceAccount) {
+    throw new Error('The $GOOGLE_SERVICE_ACCOUNT environment variable was not found!');
+  }
+  const parsedServiceAccount = JSON.parse(serviceAccount);
 
-  const client = await auth.getClient();
+  const client = auth.fromJSON(parsedServiceAccount);
+  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
+
   const tokenResponse = await client.getAccessToken(); 
 
   if (!tokenResponse || !tokenResponse.token) {

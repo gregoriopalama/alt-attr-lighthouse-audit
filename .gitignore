@@ -2,3 +2,4 @@
 /latest-run
 
 *.html
+.env
