@@ -1,0 +1,84 @@
+name: Lighthouse
+
+permissions:
+  pull-requests: write
+
+on:
+  pull_request_target:
+    branches: [main]
+
+jobs:
+  authorize:
+    environment:
+      ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository && 'external' || 'internal' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: true
+
+  lighthouse:
+    needs: authorize
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+
+    strategy:
+      matrix:
+        node-version: ['20.x']
+
+    steps:
+      - uses: actions/github-script@v7
+        id: pr
+        with:
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.get({
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            return pullRequest
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{fromJSON(steps.pr.outputs.result).merge_commit_sha}}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install -g dotenv-cli serve
+      - run: npm install
+      - run: serve example & npx wait-on http://localhost:3000
+      - name: Run Lighthouse Desktop
+        id: lighthouse_desktop_audit
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            http://localhost:3000
+          configPath: ./.github/workflows/lighthouse/lighthouserc-desktop.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 5
+          artifactName: lighthouse-desktop-results
+      - name: Format Lighthouse Desktop score
+        uses: actions/github-script@v7
+        id: format_lighthouse_desktop_score
+        with:
+          script: |
+            const lighthouseCommentMaker = require('./.github/workflows/lighthouse/lighthouseCommentMaker.cjs');
+
+            const lighthouseOutputs = {
+              manifest: ${{ steps.lighthouse_desktop_audit.outputs.manifest }},
+              links: ${{ steps.lighthouse_desktop_audit.outputs.links }},
+              assertionResults: ${{ steps.lighthouse_desktop_audit.outputs.assertionResults }}
+            };
+
+            const prComment = lighthouseCommentMaker({ lighthouseOutputs });
+            core.setOutput("pr_comment", prComment);
+      - uses: jwalton/gh-find-current-pr@v1
+        id: pr_number_finder
+      - name: Add Lighthouse stats as comment
+        uses: marocchino/sticky-pull-request-comment@v2.8.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: lighthouse
+          number: ${{ github.event.number || steps.pr_number_finder.outputs.pr }}
+          message: |
+            ## Desktop score 
+            ${{ steps.format_lighthouse_desktop_score.outputs.pr_comment }}

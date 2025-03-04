@@ -3,3 +3,4 @@
 
 *.html
 .env
+.DS_Store
