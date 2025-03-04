@@ -39,7 +39,6 @@ async function validateAltText(imageUrl, altText,mimeType) {
 
 async function getAccessToken() {
   const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT;
-  console.log(serviceAccount);
   if (!serviceAccount) {
     throw new Error('The $GOOGLE_SERVICE_ACCOUNT environment variable was not found!');
   }
