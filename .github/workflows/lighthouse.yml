@@ -56,6 +56,8 @@ jobs:
           temporaryPublicStorage: true
           runs: 1
           artifactName: lighthouse-desktop-results
+        env:
+          GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       - name: Format Lighthouse Desktop score
         uses: actions/github-script@v7
         id: format_lighthouse_desktop_score
