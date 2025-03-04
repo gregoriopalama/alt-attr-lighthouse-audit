@@ -1,6 +1,7 @@
 /node_modules
 /latest-run
 
-*.html
+*report.html
+
 .env
 .DS_Store
