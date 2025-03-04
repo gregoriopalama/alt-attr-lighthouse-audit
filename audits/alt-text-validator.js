@@ -38,14 +38,20 @@ async function validateAltText(imageUrl, altText,mimeType) {
  
 
 async function getAccessToken() {
-  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT;
+  const auth = new GoogleAuth({
+    keyFilename: "./service_account.json", 
+    scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+  });
+
+  const client = await auth.getClient();
+  /*const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT;
   if (!serviceAccount) {
     throw new Error('The $GOOGLE_SERVICE_ACCOUNT environment variable was not found!');
   }
   const parsedServiceAccount = JSON.parse(serviceAccount);
 
   const client = auth.fromJSON(parsedServiceAccount);
-  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
+  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];*/
   const tokenResponse = await client.getAccessToken(); 
 
   if (!tokenResponse || !tokenResponse.token) {
