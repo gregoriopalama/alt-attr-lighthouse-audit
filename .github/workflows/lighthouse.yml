@@ -47,14 +47,14 @@ jobs:
       - run: serve example & npx wait-on http://localhost:3000
       - name: Run Lighthouse Desktop
         id: lighthouse_desktop_audit
-        uses: treosh/lighthouse-ci-action@v11
+        uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
             http://localhost:3000
           configPath: ./.github/workflows/lighthouse/lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
-          runs: 5
+          runs: 1
           artifactName: lighthouse-desktop-results
       - name: Format Lighthouse Desktop score
         uses: actions/github-script@v7
