@@ -21,7 +21,6 @@ class AltAttQualityAudit extends Audit {
     this.removeMissingAltTectFromImages(largeImgs);
     const lowQualityAltImgs = await this.evaluateTagAltContent(imgs, context);
     const score = lowQualityAltImgs.length === 0 ? 1 : 0;
-    console.log("Score:", score);
     return this.generateLightHouseTable(score, lowQualityAltImgs);
   }
 
@@ -34,7 +33,7 @@ class AltAttQualityAudit extends Audit {
           const altText = altMatch[1];
           img.alt = altText;
         } else {
-          console.log('Attributo alt non trovato nel snippet');
+          //console.log('Attributo alt non trovato nel snippet');
         }
       }
     });
@@ -51,7 +50,6 @@ class AltAttQualityAudit extends Audit {
   static async evaluateTagAltContent(largeImgs, context) {
     const lowQualityAltImgs = [];
     for (const img of largeImgs) {
-      console.log("Evaluating image:", img.alt); 
       const mimeType = ImageUtils.getMimeTypeFromImageUrl(img.src);
       if (img.alt !== undefined && img.alt.trim().length > 0 && mimeType !== 'image/svg+xml') { 
         try { 
@@ -61,7 +59,7 @@ class AltAttQualityAudit extends Audit {
             lowQualityAltImgs.push({ ...img, apiScore: scoreFromApi, alt: img.alt || "(empty)" });
           }
         } catch (error) {
-          console.error("Error validating image:", img.src, error);
+          //console.error("Error validating image:", img.src, error);
           lowQualityAltImgs.push({ ...img, apiScore: 0, alt: img.alt || "(empty)", error: error.message });
         }
       }

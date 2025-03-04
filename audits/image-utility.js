@@ -12,7 +12,7 @@ class ImageUtils {
             break;
           }
         }
-        console.log("File Extension:", fileExtension);
+        //console.log("File Extension:", fileExtension);
         const mimeTypes = {
             jpg: 'image/jpeg',
             jpeg: 'image/jpeg',

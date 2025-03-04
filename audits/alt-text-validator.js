@@ -14,7 +14,6 @@ async function validateAltText(imageUrl, altText,mimeType) {
       const accessToken = await getAccessToken();
       
       const requestBody = getRequestBody(base64Image,mimeType, altText); 
-      console.log("altText:", altText); 
       const url = `https://${API_ENDPOINT}/v1/projects/${PROJECT_ID}/locations/${LOCATION_ID}/publishers/google/models/${MODEL_ID}:${GENERATE_CONTENT_API}`;
 
       const response = await fetch(url, {
@@ -33,7 +32,6 @@ async function validateAltText(imageUrl, altText,mimeType) {
       const data = await response.json();
       return data;
   } catch (error) {
-      console.error("Error in validateAltText:", error);
       throw error;
   }
 }
@@ -65,7 +63,6 @@ async function getBase64FromImageUrl(imageUrl) {
     const buffer = await response.arrayBuffer();
     return Buffer.from(buffer).toString("base64").replace(/\r?\n|\r/g, ""); // Rimuove newline
   } catch (error) {
-    console.error("Error in getBase64FromImageUrl:", error);
     throw error;
   }
 }
