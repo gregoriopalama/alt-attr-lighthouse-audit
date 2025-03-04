@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'; // Assicurati di avere node-fetch installato
-import { auth } from 'google-auth-library';
+import { GoogleAuth } from 'google-auth-library';
 import { getRequestBody } from "./requestBody.js"; 
 
 async function validateAltText(imageUrl, altText,mimeType) {
