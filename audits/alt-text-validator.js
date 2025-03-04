@@ -2,7 +2,7 @@ import fetch from 'node-fetch'; // Assicurati di avere node-fetch installato
 import { auth } from 'google-auth-library';
 import { getRequestBody } from "./requestBody.js"; 
 
-async function validateAltText(imageUrl, altText) {
+async function validateAltText(imageUrl, altText,mimeType) {
   const API_ENDPOINT = "europe-west8-aiplatform.googleapis.com";
   const PROJECT_ID = "seetheunseen";
   const LOCATION_ID = "europe-west8";
@@ -12,7 +12,8 @@ async function validateAltText(imageUrl, altText) {
   try { 
       const base64Image = await getBase64FromImageUrl(imageUrl); 
       const accessToken = await getAccessToken();
-      const requestBody = getRequestBody(base64Image, altText); 
+      
+      const requestBody = getRequestBody(base64Image,mimeType, altText); 
       console.log("altText:", altText); 
       const url = `https://${API_ENDPOINT}/v1/projects/${PROJECT_ID}/locations/${LOCATION_ID}/publishers/google/models/${MODEL_ID}:${GENERATE_CONTENT_API}`;
 

@@ -1,5 +1,6 @@
 import { Audit } from "lighthouse"; 
 import { validateAltText } from "./alt-text-validator.js"; 
+import { ImageUtils } from './image-utility.js';
 
 class AltAttQualityAudit extends Audit {
   static get meta() {
@@ -50,15 +51,15 @@ class AltAttQualityAudit extends Audit {
   static async evaluateTagAltContent(largeImgs, context) {
     const lowQualityAltImgs = [];
     for (const img of largeImgs) {
-      console.log("Evaluating image:", img.alt);
-      if (img.alt !== undefined && img.alt.trim().length > 0) { 
+      console.log("Evaluating image:", img.alt); 
+      const mimeType = ImageUtils.getMimeTypeFromImageUrl(img.src);
+      if (img.alt !== undefined && img.alt.trim().length > 0 && mimeType !== 'image/svg+xml') { 
         try { 
-          const validationResult = await validateAltText(img.src, img.alt, context); 
+          const validationResult = await validateAltText(img.src, img.alt, mimeType); 
           const scoreFromApi = parseInt(validationResult[0].candidates[0].content.parts[0].text); 
           if (scoreFromApi < context.settings.minScore){
             lowQualityAltImgs.push({ ...img, apiScore: scoreFromApi, alt: img.alt || "(empty)" });
           }
-          
         } catch (error) {
           console.error("Error validating image:", img.src, error);
           lowQualityAltImgs.push({ ...img, apiScore: 0, alt: img.alt || "(empty)", error: error.message });

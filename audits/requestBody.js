@@ -1,11 +1,11 @@
-const getRequestBody = (base64Image, altText) => ({
+const getRequestBody = (base64Image,mimeType, altText) => ({
     contents: [
       {
         role: "user",
         parts: [
           {
             inlineData: {
-              mimeType: "image/jpeg",
+              mimeType: mimeType,
               data: base64Image, // Assicurati che sia una stringa valida
             },
           },
