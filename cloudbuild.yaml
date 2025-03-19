@@ -4,8 +4,10 @@ steps:
     args: ['install', 'lighthouse', 'serve']
 
   - name: 'node:16'
-    entrypoint: 'serve'
+    entrypoint: 'npx'
     args:
+      - 'serve'
+      - '--port=3000'
       - 'example'
 
   - name: 'node:16'
