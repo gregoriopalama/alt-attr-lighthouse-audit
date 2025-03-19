@@ -24,6 +24,8 @@ steps:
 
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
+    secretEnv:
+      - GITHUB_TOKEN
     args:
       - '-c'
       - |
@@ -37,7 +39,6 @@ substitutions:
   _URL_TO_TEST: 'http://localhost:3000'
   _GITHUB_REPO: 'gregoriopalama/alt-attr-lighthouse-audit'
   _GITHUB_PR_NUMBER: '${BUILD_NUMBER}'
-  _GITHUB_TOKEN: '${secrets.GITHUB_TOKEN}'
 
 secrets:
   - kmsKeyName: projects/seetheunseen/locations/global/keyRings/github-secrets/cryptoKeys/github-token
