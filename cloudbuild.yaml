@@ -11,7 +11,8 @@ steps:
       - >-
         npm install -g @lhci/cli@0.14.x && lhci autorun --failOnUploadFailure
         --config=.github/workflows/lighthouse/lighthouserc.json
-        --collect.staticDistDir=example --outputDir=. --reportFilenamePattern=lighthouse-report.html
+        --collect.staticDistDir=example --upload.target=filesystem 
+        --upload.outputDir=. --upload.reportFilenamePattern=lighthouse-report.html
     id: lighthouse
     entrypoint: /bin/sh
 
