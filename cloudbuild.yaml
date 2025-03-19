@@ -1,9 +1,9 @@
 steps:
-  - name: 'node:16-alpine'
+  - name: 'node:22.11.0-alpine'
     args:
       - npm
       - ci
-  - name: 'cypress/browsers:node16.17.0-chrome106'
+  - name: 'cypress/browsers:node-22.11.0-chrome-131.0.6778.85-1-ff-132.0.2-edge-131.0.2903.70-1'
     env:
       - LHCI_BUILD_CONTEXT__CURRENT_BRANCH=$BRANCH_NAME
     args:
@@ -14,12 +14,6 @@ steps:
         --collect.staticDistDir=example --outputDir=. --reportFilenamePattern=lighthouse-report.html
     id: lighthouse
     entrypoint: /bin/sh
-  - name: 'node:16'
-    entrypoint: 'npx'
-    args:
-      - '-c'
-      - |
-        export CHROME_PATH=/usr/bin/chromium; npx lighthouse --output=html --output-path=lighthouse-report.html --config-path=./custom-config.cjs --formFactor=desktop --screenEmulation.disabled=true ${_URL_TO_TEST}
 
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'lighthouse-report.html', 'gs://${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html']
