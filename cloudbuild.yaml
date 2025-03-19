@@ -1,27 +1,19 @@
 steps:
-  - name: 'node:16'
-    entrypoint: 'npm'
-    args: ['install', 'lighthouse', 'serve']
-
-  - name: 'debian:buster'
-    entrypoint: 'bash'
+  - name: 'node:16-alpine'
+    args:
+      - npm
+      - ci
+  - name: 'cypress/browsers:node16.17.0-chrome106'
+    env:
+      - LHCI_BUILD_CONTEXT__CURRENT_BRANCH=$BRANCH_NAME
     args:
       - '-c'
-      - 'apt-get update && apt-get install -y chromium'
-
-  - name: 'node:16'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - 'npx serve example & sleep 5'
-
-  - name: 'node:16'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        export CHROME_PATH=/usr/bin/chromium; npx lighthouse --output=html --output-path=lighthouse-report.html --audit-plugins=./my-audit.cjs http://localhost:5000
-   
+      - >-
+        npm install -g @lhci/cli@0.14.x && lhci autorun --failOnUploadFailure
+        --config=.github/workflows/lighthouse/lighthouserc.json
+        --collect.staticDistDir=example --outputDir=. --reportFilenamePattern=lighthouse-report.html
+    id: lighthouse
+    entrypoint: /bin/sh
   - name: 'node:16'
     entrypoint: 'npx'
     args:
@@ -48,8 +40,8 @@ steps:
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
 
+
 substitutions:
-  _URL_TO_TEST: 'http://localhost:3000'
   _GITHUB_REPO: 'gregoriopalama/alt-attr-lighthouse-audit'
   _GITHUB_PR_NUMBER: '${BUILD_NUMBER}'
 
