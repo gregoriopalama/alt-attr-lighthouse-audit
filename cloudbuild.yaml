@@ -18,7 +18,6 @@ steps:
       - '--formFactor=desktop'
       - '--screenEmulation.disabled=true'
       - '${_URL_TO_TEST}'
-    serviceAccount: 'vertexaisa@seetheunseen.iam.gserviceaccount.com'
 
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'lighthouse-report.html', 'gs://${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html']
