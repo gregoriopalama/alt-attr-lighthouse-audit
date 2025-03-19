@@ -7,7 +7,6 @@ steps:
     entrypoint: 'npx'
     args:
       - 'serve'
-      - '--port=3000'
       - 'example'
 
   - name: 'node:16'
