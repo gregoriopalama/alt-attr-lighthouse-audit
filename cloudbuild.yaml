@@ -3,6 +3,12 @@ steps:
     entrypoint: 'npm'
     args: ['install', 'lighthouse', 'serve']
 
+  - name: 'debian:buster'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'apt-get update && apt-get install -y chromium'
+
   - name: 'node:16'
     entrypoint: 'bash'
     args:
@@ -10,15 +16,18 @@ steps:
       - 'npx serve example & sleep 5'
 
   - name: 'node:16'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        export CHROME_PATH=/usr/bin/chromium; npx lighthouse --output=html --output-path=lighthouse-report.html --audit-plugins=./my-audit.cjs http://localhost:5000
+   
+  - name: 'node:16'
     entrypoint: 'npx'
     args:
-      - 'lighthouse'
-      - '--output=html'
-      - '--output-path=lighthouse-report.html'
-      - '--config-path=./custom-config.cjs'
-      - '--formFactor=desktop'
-      - '--screenEmulation.disabled=true'
-      - '${_URL_TO_TEST}'
+      - '-c'
+      - |
+        export CHROME_PATH=/usr/bin/chromium; npx lighthouse --output=html --output-path=lighthouse-report.html --config-path=./custom-config.cjs --formFactor=desktop --screenEmulation.disabled=true ${_URL_TO_TEST}
 
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'lighthouse-report.html', 'gs://${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html']
