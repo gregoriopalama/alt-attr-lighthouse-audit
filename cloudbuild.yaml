@@ -4,18 +4,10 @@ steps:
     args: ['install', 'lighthouse', 'serve']
 
   - name: 'node:16'
-    entrypoint: 'npm'
-    args: ['install']
-
-  - name: 'node:16'
-    entrypoint: 'npx'
+    entrypoint: 'bash'
     args:
-      - 'serve'
-      - 'example'
-      - '&'
-      - 'npx'
-      - 'wait-on'
-      - 'http://localhost:3000'
+      - '-c'
+      - 'npx serve example & sleep 5'
 
   - name: 'node:16'
     entrypoint: 'npx'
