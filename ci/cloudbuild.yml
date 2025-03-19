@@ -1,0 +1,46 @@
+steps:
+  - name: 'node:16'
+    entrypoint: 'npm'
+    args: ['install', 'lighthouse', 'serve']
+
+  - name: 'node:16'
+    entrypoint: 'serve'
+    args:
+      - 'example'
+
+  - name: 'node:16'
+    entrypoint: 'npx'
+    args:
+      - 'lighthouse'
+      - '--output=html'
+      - '--output-path=lighthouse-report.html'
+      - '--config-path=./custom-config.cjs'
+      - '--formFactor=desktop'
+      - '--screenEmulation.disabled=true'
+      - '${_URL_TO_TEST}'
+    serviceAccount: 'vertexaisa@seetheunseen.iam.gserviceaccount.com'
+
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', 'lighthouse-report.html', 'gs://${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html']
+
+  - name: 'gcr.io/cloud-builders/curl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        curl -X POST \
+        -H "Authorization: token ${GITHUB_TOKEN}" \
+        -H "Accept: application/vnd.github.v3+json" \
+        "https://api.github.com/repos/${_GITHUB_REPO}/issues/${_GITHUB_PR_NUMBER}/comments" \
+        -d '{"body":"Report Lighthouse: https://storage.googleapis.com/${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html"}'
+
+substitutions:
+  _URL_TO_TEST: 'http://localhost:3000'
+  _GITHUB_REPO: 'gregoriopalama/alt-attr-lighthouse-audit'
+  _GITHUB_PR_NUMBER: '${BUILD_NUMBER}'
+  _GITHUB_TOKEN: '${secrets.GITHUB_TOKEN}'
+
+secrets:
+  - kmsKeyName: projects/seetheunseen/locations/global/keyRings/github-secrets/cryptoKeys/github-token
+    secretEnv:
+      GITHUB_TOKEN: 'CiQA7FZl4ZEjQ6qEXCD/xfgtEylkLRGYnKF4WmyQ7cJ2nxu3cjcShwEAvHKVLf1YRrG8FklT9O1YMYetM7+BTC0aSuSphwqDiK6GYzKxzxClDSUnHHzJwU0xrRl/UzwvEH31PyQZCgyBMojxQeLO2KpTJy4otKZGK2DUbgxpCscEXwADWAtwMkkxwvwVjvHcFXoGLc7ZydbknXmIXvuqV2ScI/obJwqEmTqAM0PGhAI='
