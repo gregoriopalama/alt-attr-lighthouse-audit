@@ -15,6 +15,7 @@
             "unsized-images",
             "offline-start-url"
           ],
+          "chromeFlags": "--no-sandbox",
           "formFactor": "desktop",
           "throttling": {
             "rttMs": 40,
