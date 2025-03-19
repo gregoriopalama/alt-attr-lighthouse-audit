@@ -35,6 +35,9 @@ steps:
         "https://api.github.com/repos/${_GITHUB_REPO}/issues/${_GITHUB_PR_NUMBER}/comments" \
         -d '{"body":"Report Lighthouse: https://storage.googleapis.com/${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html"}'
 
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+
 substitutions:
   _URL_TO_TEST: 'http://localhost:3000'
   _GITHUB_REPO: 'gregoriopalama/alt-attr-lighthouse-audit'
