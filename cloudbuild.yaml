@@ -29,7 +29,7 @@ steps:
         curl -X POST 
         -H "Authorization: token $${GITHUB_TOKEN}" 
         -H "Accept: application/vnd.github.v3+json" 
-        "https://api.github.com/repos/${_GITHUB_REPO}/issues/${_GITHUB_PR_NUMBER}/comments" 
+        "https://api.github.com/repos/${_GITHUB_REPO}/issues/${_PR_NUMBER}/comments" 
         -d '{"body":"Report Lighthouse: https://storage.googleapis.com/${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html"}'
 
 options:
@@ -38,7 +38,6 @@ options:
 
 substitutions:
   _GITHUB_REPO: 'gregoriopalama/alt-attr-lighthouse-audit'
-  _GITHUB_PR_NUMBER: '${BUILD_NUMBER}'
 
 secrets:
   - kmsKeyName: projects/seetheunseen/locations/global/keyRings/github-secrets/cryptoKeys/github-token
