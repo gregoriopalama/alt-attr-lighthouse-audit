@@ -47,7 +47,6 @@ options:
 
 substitutions:
   _GITHUB_REPO: 'gregoriopalama/alt-attr-lighthouse-audit'
-  _GITHUB_PR_NUMBER: '${BUILD_NUMBER}'
 
 secrets:
   - kmsKeyName: projects/seetheunseen/locations/global/keyRings/github-secrets/cryptoKeys/github-token
