@@ -32,7 +32,7 @@ steps:
           --key=github-token \
           --keyring=github-secrets \
           --location=global \
-          --project=YOUR_PROJECT_ID
+          --project=${PROJECT_ID}
 
         echo "Decrypted token (od -c):"
         od -c /tmp/decrypted_token
