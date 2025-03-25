@@ -23,7 +23,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "printenv | grep BUILD_NUMBER"
+      - "echo $BUILD_ID
 
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
