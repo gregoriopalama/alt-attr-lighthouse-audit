@@ -26,7 +26,7 @@ steps:
     args:
       - '-c'
       - |
-        echo "BUILD_NUMBER: ${BUILD_NUMBER}"
+        echo "BUILD_NUMBER: $BUILD_NUMBER"
 
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
@@ -38,7 +38,7 @@ steps:
         curl -v -X POST 
         -H "Authorization: token $${GITHUB_TOKEN}" 
         -H "Accept: application/vnd.github.v3+json" 
-        "https://api.github.com/repos/${_GITHUB_REPO}/issues/${BUILD_NUMBER}/comments" 
+        "https://api.github.com/repos/${_GITHUB_REPO}/issues/$BUILD_NUMBER/comments" 
         -d '{"body":"Report Lighthouse: https://storage.googleapis.com/${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html"}'
 
 options:
