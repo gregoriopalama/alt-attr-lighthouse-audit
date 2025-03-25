@@ -19,16 +19,7 @@ steps:
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'lighthouse-report.html', 'gs://${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html']
 
-  - name: 'gcr.io/cloud-builders/curl'
-    entrypoint: 'bash'
-    secretEnv:
-      - GITHUB_TOKEN
-    args:
-      - '-c'
-      - >-
-        curl -v
-        -H "Authorization: token $${GITHUB_TOKEN}" 
-        "https://api.github.com/user"
+  
 
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
@@ -51,6 +42,17 @@ steps:
         # If needed, print lengths, or replace problematic chars
         token_len=$(cat /tmp/decrypted_token | wc -c)
         echo "Token Length: $token_len"
+
+  - name: 'gcr.io/cloud-builders/curl'
+    entrypoint: 'bash'
+    secretEnv:
+      - GITHUB_TOKEN
+    args:
+      - '-c'
+      - >-
+        curl -v
+        -H "Authorization: token $${GITHUB_TOKEN}" 
+        "https://api.github.com/user"
 
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
