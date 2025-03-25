@@ -30,6 +30,28 @@ steps:
         -H "Authorization: token $${GITHUB_TOKEN}" 
         "https://api.github.com/user"
 
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud kms decrypt \
+          --ciphertext-file=<(echo -n "CiQA7FZl4ZEjQ6qEXCD/xfgtEylkLRGYnKF4WmyQ7cJ2nxu3cjcShwEAvHKVLf1YRrG8FklT9O1YMYetM7+BTC0aSuSphwqDiK6GYzKxzxClDSUnHHzJwU0xrRl/UzwvEH31PyQZCgyBMojxQeLO2KpTJy4otKZGK2DUbgxpCscEXwADWAtwMkkxwvwVjvHcFXoGLc7ZydbknXmIXvuqV2ScI/obJwqEmTqAM0PGhAI=" | base64 -d) \
+          --plaintext-file=/tmp/decrypted_token \
+          --key=github-token \
+          --keyring=github-secrets \
+          --location=global \
+          --project=YOUR_PROJECT_ID
+
+        echo "Decrypted token (od -c):"
+        od -c /tmp/decrypted_token
+        echo "Decrypted token (hexdump -C):"
+        hexdump -C /tmp/decrypted_token
+
+        # If needed, print lengths, or replace problematic chars
+        token_len=$(cat /tmp/decrypted_token | wc -c)
+        echo "Token Length: $token_len"
+
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
     secretEnv:
