@@ -44,9 +44,11 @@ async function getAccessToken() {
   });
 
   const client = await auth.getClient();*/
-  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT;
+  const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+  console.log(process.env.GOOGLE_SERVICE_ACCOUNT);
   if (!serviceAccount) {
-    throw new Error('The $GOOGLE_SERVICE_ACCOUNT environment variable was not found!');
+    throw new Error('The $GOOGLE_APPLICATION_CREDENTIALS environment variable was not found!');
   }
   const parsedServiceAccount = JSON.parse(serviceAccount);
 
