@@ -24,7 +24,7 @@ steps:
     args:
       - '-c'
       - |
-        echo $BUILD_ID
+        echo $_PR_NUMBER
 
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
