@@ -19,27 +19,6 @@ steps:
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'lighthouse-report.html', 'gs://${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html']
 
-  
-
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    secretEnv:
-      - GITHUB_TOKEN
-    args:
-      - '-c'
-      - |
-        CLEAN_GITHUB_TOKEN=$(echo "${GITHUB_TOKEN}"" | tr -d '\n')
-        echo $CLEAN_GITHUB_TOKEN > /tmp/drcrypted_token
-
-        echo "Decrypted token (od -c):"
-        od -c /tmp/decrypted_token
-        echo "Decrypted token (hexdump -C):"
-        hexdump -C /tmp/decrypted_token
-
-        # If needed, print lengths, or replace problematic chars
-        token_len=$(cat /tmp/decrypted_token | wc -c)
-        echo "Token Length: $token_len"
-
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
     secretEnv:
@@ -48,7 +27,7 @@ steps:
       - '-c'
       - >-
         curl -v
-        -H "Authorization: token $${GITHUB_TOKEN}" 
+        -H "Authorization: token $(echo $${GITHUB_TOKEN} | tr -d '\n')" 
         "https://api.github.com/user"
 
   - name: 'gcr.io/cloud-builders/curl'
