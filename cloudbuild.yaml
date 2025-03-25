@@ -23,16 +23,13 @@ steps:
 
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
+    secretEnv:
+      - GITHUB_TOKEN
     args:
       - '-c'
       - |
-        gcloud kms decrypt \
-          --ciphertext-file=<(echo -n "CiQA7FZl4ZEjQ6qEXCD/xfgtEylkLRGYnKF4WmyQ7cJ2nxu3cjcShwEAvHKVLf1YRrG8FklT9O1YMYetM7+BTC0aSuSphwqDiK6GYzKxzxClDSUnHHzJwU0xrRl/UzwvEH31PyQZCgyBMojxQeLO2KpTJy4otKZGK2DUbgxpCscEXwADWAtwMkkxwvwVjvHcFXoGLc7ZydbknXmIXvuqV2ScI/obJwqEmTqAM0PGhAI=" | base64 -d) \
-          --plaintext-file=/tmp/decrypted_token \
-          --key=github-token \
-          --keyring=github-secrets \
-          --location=global \
-          --project=${PROJECT_ID}
+        CLEAN_GITHUB_TOKEN=$(echo "$GITHUB_TOKEN" | tr -d '\n')
+        echo $CLEAN_GITHUB_TOKEN > /tmp/drcrypted_token
 
         echo "Decrypted token (od -c):"
         od -c /tmp/decrypted_token
