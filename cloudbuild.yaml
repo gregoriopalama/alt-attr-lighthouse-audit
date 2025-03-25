@@ -28,7 +28,7 @@ steps:
     args:
       - '-c'
       - |
-        CLEAN_GITHUB_TOKEN=$(echo "$GITHUB_TOKEN" | tr -d '\n')
+        CLEAN_GITHUB_TOKEN=$(echo ${GITHUB_TOKEN} | tr -d '\n')
         echo $CLEAN_GITHUB_TOKEN > /tmp/drcrypted_token
 
         echo "Decrypted token (od -c):"
