@@ -26,6 +26,17 @@ steps:
     args:
       - '-c'
       - >-
+        curl 
+        -H "Authorization: token $${GITHUB_TOKEN}" 
+        "https://api.github.com/user"
+
+  - name: 'gcr.io/cloud-builders/curl'
+    entrypoint: 'bash'
+    secretEnv:
+      - GITHUB_TOKEN
+    args:
+      - '-c'
+      - >-
         curl -v -X POST 
         -H "Authorization: token $${GITHUB_TOKEN}" 
         -H "Accept: application/vnd.github.v3+json" 
