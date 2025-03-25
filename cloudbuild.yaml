@@ -19,14 +19,11 @@ steps:
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'lighthouse-report.html', 'gs://${PROJECT_ID}-lighthouse-reports/${SHORT_SHA}/lighthouse-report.html']
 
-  - name: 'gcr.io/cloud-builders/curl'
-    entrypoint: 'bash'
-    secretEnv:
-      - GITHUB_TOKEN
+  - name: "ubuntu"
+    entrypoint: "bash"
     args:
-      - '-c'
-      - |
-        echo "BUILD_NUMBER: $BUILD_NUMBER"
+      - "-c"
+      - "printenv | grep BUILD_NUMBER"
 
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
