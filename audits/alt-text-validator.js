@@ -38,19 +38,19 @@ async function validateAltText(imageUrl, altText,mimeType) {
  
 
 async function getAccessToken() {
-  /*const auth = new GoogleAuth({
-    keyFilename: "./service_account.json", 
+  const auth = new GoogleAuth({
+    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS, 
     scopes: ["https://www.googleapis.com/auth/cloud-platform"],
   });
 
-  const client = await auth.getClient();*/
-  const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  const client = await auth.getClient();
+  /*const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
   if (!serviceAccount) {
     throw new Error('The $GOOGLE_APPLICATION_CREDENTIALS environment variable was not found!');
   }
   const parsedServiceAccount = JSON.parse(serviceAccount);
 
-  const client = auth.fromJSON(parsedServiceAccount);
+  const client = auth.fromJSON(parsedServiceAccount);*/
   client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
   const tokenResponse = await client.getAccessToken(); 
 
