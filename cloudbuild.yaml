@@ -3,13 +3,23 @@ steps:
     args:
       - npm
       - ci
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    secretEnv:
+      - GOOGLE_SA
+    args:
+      - '-c'
+      - |
+        echo $${GOOGLE_SA} > GOOGLE_SA.json
+        export GOOGLE_APPLICATION_CREDENTIALS=GOOGLE_SA.json
+
   - name: 'cypress/browsers:node-22.11.0-chrome-131.0.6778.85-1-ff-132.0.2-edge-131.0.2903.70-1'
     env:
       - LHCI_BUILD_CONTEXT__CURRENT_BRANCH=$BRANCH_NAME
     args:
       - '-c'
       - >-
-        echo ${GOOGLE_APPLICATION_CREDENTIALS} && 
         npm install -g @lhci/cli@0.14.x && lhci autorun --failOnUploadFailure
         --config=.github/workflows/lighthouse/lighthouserc.json
         --collect.staticDistDir=example --upload.target=filesystem 
@@ -44,3 +54,8 @@ secrets:
   - kmsKeyName: projects/seetheunseen/locations/global/keyRings/github-secrets/cryptoKeys/github-token
     secretEnv:
       GITHUB_TOKEN: 'CiQA7FZl4ZEjQ6qEXCD/xfgtEylkLRGYnKF4WmyQ7cJ2nxu3cjcShwEAvHKVLf1YRrG8FklT9O1YMYetM7+BTC0aSuSphwqDiK6GYzKxzxClDSUnHHzJwU0xrRl/UzwvEH31PyQZCgyBMojxQeLO2KpTJy4otKZGK2DUbgxpCscEXwADWAtwMkkxwvwVjvHcFXoGLc7ZydbknXmIXvuqV2ScI/obJwqEmTqAM0PGhAI='
+  - kmsKeyName: >-
+      projects/seetheunseen/locations/global/keyRings/google-credentials/cryptoKeys/google-application-credentials
+    secretEnv:
+      GOOGLE_SA: >-
+        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
