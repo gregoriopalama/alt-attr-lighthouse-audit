@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'; // Assicurati di avere node-fetch installato
-import { auth } from 'google-auth-library';
+import { auth, GoogleAuth } from 'google-auth-library';
 import { getRequestBody } from "./requestBody.js"; 
 
 async function validateAltText(imageUrl, altText,mimeType) {
@@ -42,7 +42,7 @@ async function getAccessToken() {
     keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS, 
     scopes: ["https://www.googleapis.com/auth/cloud-platform"],
   });
-
+   
   const client = await auth.getClient();
   /*const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
   if (!serviceAccount) {
@@ -50,15 +50,15 @@ async function getAccessToken() {
   }
   const parsedServiceAccount = JSON.parse(serviceAccount);
 
-  const client = auth.fromJSON(parsedServiceAccount);*/
-  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
+  const client = auth.fromJSON(parsedServiceAccount);
+  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];*/
   const tokenResponse = await client.getAccessToken(); 
-
   if (!tokenResponse || !tokenResponse.token) {
     throw new Error("Failed to obtain access token");
   }
  
   return tokenResponse.token; 
+  
 }
 
 
