@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'; // Assicurati di avere node-fetch installato
-import { auth } from 'google-auth-library';
+import { auth, GoogleAuth } from 'google-auth-library';
 import { getRequestBody } from "./requestBody.js"; 
 
 async function validateAltText(imageUrl, altText,mimeType) {
@@ -38,27 +38,27 @@ async function validateAltText(imageUrl, altText,mimeType) {
  
 
 async function getAccessToken() {
-  /*const auth = new GoogleAuth({
-    keyFilename: "./service_account.json", 
+  const auth = new GoogleAuth({
+    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS, 
     scopes: ["https://www.googleapis.com/auth/cloud-platform"],
   });
-
-  const client = await auth.getClient();*/
-  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT;
+   
+  const client = await auth.getClient();
+  /*const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
   if (!serviceAccount) {
-    throw new Error('The $GOOGLE_SERVICE_ACCOUNT environment variable was not found!');
+    throw new Error('The $GOOGLE_APPLICATION_CREDENTIALS environment variable was not found!');
   }
   const parsedServiceAccount = JSON.parse(serviceAccount);
 
   const client = auth.fromJSON(parsedServiceAccount);
-  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
+  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];*/
   const tokenResponse = await client.getAccessToken(); 
-
   if (!tokenResponse || !tokenResponse.token) {
     throw new Error("Failed to obtain access token");
   }
  
   return tokenResponse.token; 
+  
 }
 
 
