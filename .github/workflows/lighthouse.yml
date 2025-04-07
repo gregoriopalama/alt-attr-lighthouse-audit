@@ -48,7 +48,6 @@ jobs:
       - run: echo $GOOGLE_SERVICE_ACCOUNT > GOOGLE_SA.json
         env:
           GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-      - run: echo "GOOGLE_SA.json" >> $GOOGLE_APPLICATION_CREDENTIALS
       - name: Run Lighthouse Desktop
         id: lighthouse_desktop_audit
         uses: treosh/lighthouse-ci-action@v12
@@ -61,7 +60,7 @@ jobs:
           runs: 1
           artifactName: lighthouse-desktop-results
         env:
-          GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+          GOOGLE_APPLICATION_CREDENTIALS: GOOGLE_SA.json
       - name: Format Lighthouse Desktop score
         uses: actions/github-script@v7
         id: format_lighthouse_desktop_score
